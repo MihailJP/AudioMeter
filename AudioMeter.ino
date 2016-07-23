@@ -4,6 +4,7 @@
 
 #include "debug.h"
 #include "sampler.h"
+#include "timer.h"
 
 /* THIS SKETCH RUNS ON ARDUINO DUE ONLY!! */
 
@@ -17,6 +18,9 @@ DebugLogger logger;
 // Sampler
 Sampler sampler;
 
+// Timer (external clock interrupt)
+Timer timer;
+
 void setup() {
   /* Initialize LCD */
   lcd.begin();
@@ -24,6 +28,8 @@ void setup() {
   logger.init();
   /* Initialeze sampler */
   sampler.init(A0, A1);
+  /* Initialeze timer */
+  timer.init(19);
 }
 
 void loop() {
