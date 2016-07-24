@@ -2,7 +2,7 @@
 
 #include "fastADC.h"
 
-#define SAMPLER_BUFSIZE 4096
+#define SAMPLER_BUFSIZE 14400 /* 48000 kHz * 300 ms */
 #define SAMPLER_CHANNELS 2
 
 class Sampler {

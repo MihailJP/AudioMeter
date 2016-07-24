@@ -16,6 +16,8 @@ void Sampler::retrieve() {
   adc.retrieve(&x, &y);
   buffer[0][ptr] = (x << 4) ^ 0xffff8000;
   buffer[1][ptr] = (y << 4) ^ 0xffff8000;
+
+  // Lissajous plot
   screen.lissajous.set(buffer[0][ptr], buffer[1][ptr]);
   if (++ptr >= SAMPLER_BUFSIZE) ptr = 0;
   screen.lissajous.reset(buffer[0][ptr], buffer[1][ptr]);
