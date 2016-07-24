@@ -10,6 +10,8 @@ void BarGraph::init(Screen* scr, unsigned short xx, unsigned short yy, unsigned 
   width = ww;
   height = hh;
   val = 0;
+  peak = 0;
+  peakHold = 0;
   double prev = BARGRAPH_FLOOR_DECIBEL;
 
   screen->bevelBoxf(x, y, width, height, 0x00000000);
@@ -52,6 +54,30 @@ void BarGraph::plotDbfs(double value) {
   prev = decibel;
 }
 
+void BarGraph::plotPeak(double value) {
+  double decibel = dBfs(value);
+  if (decibel > BARGRAPH_FLOOR_DECIBEL) {
+    int barLength = decibel * height / BARGRAPH_FLOOR_DECIBEL;
+    if (barLength < 0) barLength = 0;
+    if (barLength >= height) barLength = height - 1;
+    for (int i = 1; i < (width + 1) / 2; i *= 2) screen->copy(x, y + barLength, i, 1, x + i, y + barLength);
+    screen->copy(x, y + barLength, (width + 1) / 2, 1, x + (width + 1) / 2, y + barLength);
+  }
+}
+
+void BarGraph::updatePeak(int value) {
+  if (value > peak) {
+    peak = value;
+    peakHold = BARGRAPH_PEAKHOLD;
+  } else {
+    if (--peakHold < 0) {
+      peakHold = 0;
+      peak -= 256;
+      if (peak < 0) peak = 0;
+    }
+  }
+}
+
 /* RMS */
 
 void RMSGraph::enq(int newVal) {
@@ -63,7 +89,10 @@ void RMSGraph::deq(int newVal) {
 }
 
 void RMSGraph::plot() {
-  plotDbfs(sqrt((double)val / (double)SAMPLER_BUFSIZE));
+  double rms = sqrt((double)val / (double)SAMPLER_BUFSIZE);
+  plotDbfs(rms);
+  updatePeak(rms);
+  plotPeak(peak);
 }
 
 /* Peak */
@@ -82,5 +111,7 @@ void PeakGraph::deq(int) {
 
 void PeakGraph::plot() {
   plotDbfs((double)val);
+  updatePeak((int)val);
+  plotPeak(peak);
 }
 
