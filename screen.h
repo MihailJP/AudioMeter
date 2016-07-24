@@ -3,6 +3,7 @@
 #include <S1d13781_gfx.h>
 #include <S1d13781_registers.h>
 #include "lissajous.h"
+#include "bargraph.h"
 
 // LCD interface S5U13781R01C100
 // Logic voltage == 3.3V (Arduino Due only)
@@ -15,8 +16,9 @@ class Screen {
 private:
   S1d13781_gfx lcd;
   unsigned short width, height;
-public:
   LissajousView lissajous;
+  BarGraph rmsL, rmsR;
+public:
   void init();
   unsigned short getWidth();
   unsigned short getHeight();
@@ -25,5 +27,9 @@ public:
   void bevel(int, int, int, int);
   void boxf(int, int, int, int, int);
   void bevelBoxf(int, int, int, int, int);
+  void copy(int, int, int, int, int, int);
   void clear();
+  void enq(unsigned int, unsigned int);
+  void deq(unsigned int, unsigned int);
+  void plot();
 };
