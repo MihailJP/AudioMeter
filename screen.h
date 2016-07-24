@@ -17,7 +17,8 @@ private:
   S1d13781_gfx lcd;
   unsigned short width, height;
   LissajousView lissajous;
-  BarGraph rmsL, rmsR;
+  RMSGraph rmsL, rmsR;
+  PeakGraph peakL, peakR;
 public:
   void init();
   unsigned short getWidth();

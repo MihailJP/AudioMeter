@@ -1,6 +1,7 @@
 #include "bargraph.h"
 #include "sampler.h"
 #include <cmath>
+#include <cstdlib>
 
 void BarGraph::init(Screen* scr, unsigned short xx, unsigned short yy, unsigned short ww, unsigned short hh) {
   screen = scr;
@@ -28,14 +29,6 @@ void BarGraph::init(Screen* scr, unsigned short xx, unsigned short yy, unsigned 
   logger.wait(100);
 }
 
-void BarGraph::enq(int newVal) {
-  val += newVal * newVal;
-}
-
-void BarGraph::deq(int newVal) {
-  val -= newVal * newVal;
-}
-
 double BarGraph::dBfs(double value) {
   static double fullscale = log10(32768);
   return (log10(value) - fullscale) * 20;
@@ -59,8 +52,35 @@ void BarGraph::plotDbfs(double value) {
   prev = decibel;
 }
 
+/* RMS */
 
-void BarGraph::plot() {
+void RMSGraph::enq(int newVal) {
+  val += newVal * newVal;
+}
+
+void RMSGraph::deq(int newVal) {
+  val -= newVal * newVal;
+}
+
+void RMSGraph::plot() {
   plotDbfs(sqrt((double)val / (double)SAMPLER_BUFSIZE));
+}
+
+/* Peak */
+
+void PeakGraph::enq(int newVal) {
+  if (abs(newVal) > val) {
+    val = abs(newVal);
+  } else {
+    val -= 2;
+    if (val < 0) val = 0;
+  }
+}
+
+void PeakGraph::deq(int) {
+}
+
+void PeakGraph::plot() {
+  plotDbfs((double)val);
 }
 

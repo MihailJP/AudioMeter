@@ -18,8 +18,10 @@ void Screen::init() {
   logger.wait(100);
 
   lissajous.init(this);
-  rmsL.init(this, 400, 4, 36, height - 8);
-  rmsR.init(this, 440, 4, 36, height - 8);
+  rmsL.init(this, 360, 4, 36, height - 8);
+  rmsR.init(this, 400, 4, 36, height - 8);
+  peakL.init(this, 320, 4, 36, height - 8);
+  peakR.init(this, 440, 4, 36, height - 8);
 }
 
 unsigned short Screen::getWidth() {
@@ -70,16 +72,22 @@ void Screen::enq(unsigned int x, unsigned int y) {
   lissajous.set(x, y);
   rmsL.enq(y);
   rmsR.enq(x);
+  peakL.enq(y);
+  peakR.enq(x);
 }
 
 void Screen::deq(unsigned int x, unsigned int y) {
   lissajous.reset(x, y);
   rmsL.deq(y);
   rmsR.deq(x);
+  peakL.deq(y);
+  peakR.deq(x);
 }
 
 void Screen::plot() {
   rmsL.plot();
   rmsR.plot();
+  peakL.plot();
+  peakR.plot();
 }
 
