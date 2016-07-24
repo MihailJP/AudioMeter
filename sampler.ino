@@ -12,18 +12,12 @@ void Sampler::init(byte ch_1, byte ch_2) {
 }
 
 void Sampler::retrieve() {
-  screen.pset(
-    ((long)(buffer[0][ptr]) + 32768) * screen.getHeight() / 65536,
-    ((long)(-buffer[1][ptr]) + 32768) * screen.getHeight() / 65536,
-    0x00ffffff);
   unsigned int x, y;
   adc.retrieve(&x, &y);
   buffer[0][ptr] = (x << 4) ^ 0xffff8000;
   buffer[1][ptr] = (y << 4) ^ 0xffff8000;
+  screen.lissajous.set(buffer[0][ptr], buffer[1][ptr]);
   if (++ptr >= SAMPLER_BUFSIZE) ptr = 0;
-  screen.pset(
-    ((long)(buffer[0][ptr]) + 32768) * screen.getHeight() / 65536,
-    ((long)(-buffer[1][ptr]) + 32768) * screen.getHeight() / 65536,
-    0x00000000);
+  screen.lissajous.reset(buffer[0][ptr], buffer[1][ptr]);
 }
 
