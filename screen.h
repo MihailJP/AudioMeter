@@ -9,6 +9,11 @@
 class Screen {
 private:
   S1d13781_gfx lcd;
+  unsigned short width, height;
 public:
   void init();
+  unsigned short getWidth();
+  unsigned short getHeight();
+  void pset(int, int, int);
+  void clear();
 };

@@ -1,5 +1,6 @@
 #include "sampler.h"
 #include <cstring>
+#include "AudioMeter.h"
 
 void Sampler::init(byte ch_1, byte ch_2) {
   memset(buffer, 0, sizeof(short) * SAMPLER_CHANNELS * SAMPLER_BUFSIZE);
@@ -14,6 +15,14 @@ void Sampler::init(byte ch_1, byte ch_2) {
 void Sampler::retrieve() {
   buffer[0][ptr] = analogRead(ch1) ^ 0x8000;
   buffer[1][ptr] = analogRead(ch2) ^ 0x8000;
+  screen.pset(
+    ((long)(buffer[0][ptr]) + 32768) * screen.getHeight() / 65536,
+    ((long)(-buffer[1][ptr]) + 32768) * screen.getHeight() / 65536,
+    0x00ffffff);
   if (++ptr >= SAMPLER_BUFSIZE) ptr = 0;
+  screen.pset(
+    ((long)(buffer[0][ptr]) + 32768) * screen.getHeight() / 65536,
+    ((long)(-buffer[1][ptr]) + 32768) * screen.getHeight() / 65536,
+    0x00000000);
 }
 

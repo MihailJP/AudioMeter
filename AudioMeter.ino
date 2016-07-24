@@ -31,6 +31,8 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  if (timer.getFlag()) {
+    sampler.retrieve();
+    timer.resetFlag();
+  }
 }
