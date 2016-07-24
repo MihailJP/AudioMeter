@@ -7,13 +7,17 @@
 #define LISSAJOUS_TRACE_COLOR 0x0004110c
 #define LISSAJOUS_TRACE_INTENSITY_FACTOR 16
 #define LISSAJOUS_WINDOW_PADDING 4
+#define LISSAJOUS_AXIS_COLOR 0x003c1d00
+#define LISSAJOUS_TRACE_COLOR_ON_AXIS 0x000d0d0d
+#define LISSAJOUS_VERNIER_DIV 8
 
 class Screen;
 
 class LissajousView {
 private:
   Screen* screen;
-  unsigned short buffer[LISSAJOUS_SIZE][LISSAJOUS_SIZE];
+  short buffer[LISSAJOUS_SIZE][LISSAJOUS_SIZE];
+  void plot(short, short);
 public:
   void init(Screen*);
   void set(short, short);
