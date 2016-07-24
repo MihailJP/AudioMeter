@@ -1,8 +1,10 @@
 #include "screen.h"
 #include "AudioMeter.h"
+#include <SPI.h>
 
 void Screen::init() {
   lcd.begin();
+  SPI.setClockDivider(slaveSelectPin, 2);
   lcd.lcdSetRotation(180); // Install LCD upside down
   lcd.lcdSetColorDepth(S1d13781::format_RGB_888);
   width = lcd.lcdGetWidth();
