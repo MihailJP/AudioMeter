@@ -4,6 +4,7 @@
 #include <SPI.h>
 
 void Screen::init() {
+  delay(250); // required for cold start
   lcd.begin();
   SPI.setClockDivider(slaveSelectPin, 2);
   lcd.lcdSetRotation(180); // Install LCD upside down
