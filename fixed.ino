@@ -102,3 +102,64 @@ bool Fixed::operator <= (const Fixed& val) const {
 bool Fixed::operator >= (const Fixed& val) const {
   return myVal >= val.myVal;
 }
+
+/* Function */
+
+unsigned long calc_sqrt(unsigned long val) {
+  /* square root, algorithm like Odhner machine (uses hexadecimal rather than decimal) */
+  
+  unsigned long x = val;
+  unsigned long y = 0;
+  unsigned long ans = 0;
+  
+  int basePos = 24;
+  int addPos = 24;
+  int ansPos = 28;
+  
+  do {
+    for (int i = 1; i < 32; i += 2) {
+      if (x >= (y | (i << addPos))) {
+        x -= (y | (i << addPos));
+        ans += 1 << ansPos;
+      } else {
+        y += (i - 1) << addPos;
+        if (addPos > 0) {
+          y >>= 4;
+          basePos -= 4;
+          addPos -= 8;
+        } else {
+          x <<= 8;
+          y <<= 4;
+        }
+        ansPos -= 4;
+        break;
+      }
+    }
+  } while (ansPos >= 4);
+
+  return ans;
+}
+
+const Fixed Fixed::sqrt(const Fixed& val) {
+  Fixed ans;
+  if (val.myVal < 0) {
+    ans.myVal = 0x80000000L; // invalid
+  } else {
+    unsigned long answer = calc_sqrt((unsigned long)val.myVal);
+    answer >>= 16 - (PREC / 2);
+    ans.myVal = (long)answer;
+  }
+  return std::move(ans);
+}
+
+const Fixed Fixed::sqrt(long val) {
+  Fixed ans;
+  if (val < 0) {
+    ans.valid = false; // invalid
+  } else {
+    unsigned long answer = calc_sqrt((unsigned long)val);
+    answer >>= 16 - PREC;
+    ans.myVal = (long)answer;
+  }
+  return std::move(ans);
+}

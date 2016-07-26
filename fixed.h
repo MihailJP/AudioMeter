@@ -59,4 +59,7 @@ public: // comparison
   inline bool operator > (const int val) const {return *this > Fixed(val);}
   inline bool operator <= (const int val) const {return *this <= Fixed(val);}
   inline bool operator >= (const int val) const {return *this >= Fixed(val);}
+public: // function
+  static const Fixed sqrt(const Fixed&);
+  static const Fixed sqrt(long);
 };
