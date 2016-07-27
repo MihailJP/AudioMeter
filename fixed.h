@@ -62,4 +62,6 @@ public: // comparison
 public: // function
   static const Fixed sqrt(const Fixed&);
   static const Fixed sqrt(long);
+  static const Fixed log2(const Fixed&);
+  static const Fixed log10(const Fixed&);
 };

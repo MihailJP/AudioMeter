@@ -163,3 +163,45 @@ const Fixed Fixed::sqrt(long val) {
   }
   return std::move(ans);
 }
+
+const Fixed Fixed::log2(const Fixed& val) {
+  Fixed ans;
+  if (val.myVal <= 0) {
+    ans.myVal = 0x80000000L; // invalid
+  } else {
+    long long antilog = val.myVal;
+    if ((antilog & (-1 << PREC)) == 0) { // less than one
+      while ((antilog & (-1 << PREC)) != (1 << PREC)) {
+        antilog <<= 1;
+        ans.myVal -= 1;
+      }
+    } else if ((antilog & (-1 << (PREC + 1))) != 0) { // not less than two
+      while ((antilog & (-1 << PREC)) != (1 << PREC)) {
+        antilog >>= 1;
+        ans.myVal += 1;
+      }
+    }
+
+    for (int i = 0; i < PREC; ++i) {
+      antilog *= antilog;
+      ans.myVal <<= 1;
+      if ((antilog & (-1 << PREC * 2 + 1)) != 0) {
+        ans.myVal |= 1;
+        antilog >>= 1;
+      }
+      antilog >>= PREC;
+    }
+  }
+  return std::move(ans);
+}
+
+const Fixed Fixed::log10(const Fixed& val) {
+  Fixed ans;
+  if (val.myVal <= 0) {
+    ans.myVal = 0x80000000L; // invalid
+  } else {
+    static Fixed log2_10 = log2(10);
+    ans = log2(val) / log2_10;
+  }
+  return std::move(ans);
+}
