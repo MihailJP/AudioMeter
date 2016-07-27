@@ -4,6 +4,7 @@
 
 class Fixed {
 private:
+  bool valid;
   long myVal;
 public: // constructors
   Fixed();
@@ -24,6 +25,8 @@ public: // cast
   operator float() const;
   operator double() const;
   operator bool() const;
+public: // attribute
+  bool isValid() const;
 public: // arithmetic operators
   const Fixed operator + (const Fixed&) const;
   const Fixed operator - (const Fixed&) const;
