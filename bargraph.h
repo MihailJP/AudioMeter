@@ -1,5 +1,7 @@
 #pragma once
 
+#include "fixed.h"
+
 class Screen;
 
 #define BARGRAPH_FLOOR_DECIBEL (-40.0)
@@ -11,10 +13,10 @@ protected:
   unsigned short x, y, width, height;
   long long int val;
   int peak, peakHold;
-  double prev;
-  double dBfs(double);
-  void plotDbfs(double);
-  void plotPeak(double);
+  Fixed prev;
+  Fixed dBfs(Fixed);
+  void plotDbfs(Fixed);
+  void plotPeak(Fixed);
   void updatePeak(int);
 public:
   void init(Screen*, unsigned short, unsigned short, unsigned short, unsigned short);

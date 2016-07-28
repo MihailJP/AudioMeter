@@ -12,7 +12,7 @@ void BarGraph::init(Screen* scr, unsigned short xx, unsigned short yy, unsigned 
   val = 0;
   peak = 0;
   peakHold = 0;
-  double prev = BARGRAPH_FLOOR_DECIBEL;
+  Fixed prev = BARGRAPH_FLOOR_DECIBEL;
 
   screen->bevelBoxf(x, y, width, height, 0x00000000);
   for (int i = 0; i < height / 2; ++i) {
@@ -31,13 +31,15 @@ void BarGraph::init(Screen* scr, unsigned short xx, unsigned short yy, unsigned 
   logger.wait(100);
 }
 
-double BarGraph::dBfs(double value) {
-  static double fullscale = log10(32768);
-  return (log10(value) - fullscale) * 20;
+Fixed BarGraph::dBfs(Fixed value) {
+  static Fixed fullscale = Fixed::log10(32768);
+  Fixed lgval = Fixed::log10(value);
+  if (lgval.isValid()) return (Fixed::log10(value) - fullscale) * 20;
+  else return BARGRAPH_FLOOR_DECIBEL - 10;
 }
 
-void BarGraph::plotDbfs(double value) {
-  double decibel = dBfs(value);
+void BarGraph::plotDbfs(Fixed value) {
+  Fixed decibel = dBfs(value);
   if (decibel <= BARGRAPH_FLOOR_DECIBEL) {
     screen->boxf(x + 1, y, width - 1, height, 0x00000000);
     decibel = BARGRAPH_FLOOR_DECIBEL;
@@ -54,8 +56,8 @@ void BarGraph::plotDbfs(double value) {
   prev = decibel;
 }
 
-void BarGraph::plotPeak(double value) {
-  double decibel = dBfs(value);
+void BarGraph::plotPeak(Fixed value) {
+  Fixed decibel = dBfs(value);
   if (decibel > BARGRAPH_FLOOR_DECIBEL) {
     int barLength = decibel * height / BARGRAPH_FLOOR_DECIBEL;
     if (barLength < 0) barLength = 0;
@@ -89,7 +91,8 @@ void RMSGraph::deq(int newVal) {
 }
 
 void RMSGraph::plot() {
-  double rms = sqrt((double)val / (double)SAMPLER_BUFSIZE);
+  long long rootmean = val / (long long)SAMPLER_BUFSIZE;
+  Fixed rms = Fixed::sqrt((long)rootmean);
   plotDbfs(rms);
   updatePeak(rms);
   plotPeak(peak);
@@ -110,7 +113,7 @@ void PeakGraph::deq(int) {
 }
 
 void PeakGraph::plot() {
-  plotDbfs((double)val);
+  plotDbfs((Fixed)val);
   updatePeak((int)val);
   plotPeak(peak);
 }
