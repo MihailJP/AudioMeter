@@ -19,7 +19,7 @@ void Sampler::retrieve() {
 
   screen.enq(buffer[0][ptr], buffer[1][ptr]);
   if (++ptr >= SAMPLER_BUFSIZE) ptr = 0;
-  if (ptr % (SAMPLER_BUFSIZE / 20) == 0) screen.plot();
+  if (ptr % (SAMPLER_BUFSIZE / 200) == 0) screen.plot((ptr / (SAMPLER_BUFSIZE / 200)) % 20);
   screen.deq(buffer[0][ptr], buffer[1][ptr]);
 }
 

@@ -32,5 +32,5 @@ public:
   void clear();
   void enq(unsigned int, unsigned int);
   void deq(unsigned int, unsigned int);
-  void plot();
+  void plot(unsigned int);
 };

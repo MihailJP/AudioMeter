@@ -101,7 +101,7 @@ void PeakGraph::enq(int newVal) {
   if (abs(newVal) > val) {
     val = abs(newVal);
   } else {
-    val -= 2;
+    val -= 4;
     if (val < 0) val = 0;
   }
 }

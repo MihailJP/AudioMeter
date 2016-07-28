@@ -85,10 +85,20 @@ void Screen::deq(unsigned int x, unsigned int y) {
   peakR.deq(x);
 }
 
-void Screen::plot() {
-  rmsL.plot();
-  rmsR.plot();
-  peakL.plot();
-  peakR.plot();
+void Screen::plot(unsigned int phase) {
+  switch (phase) {
+  case 0:
+    rmsL.plot();
+    break;
+  case 5:
+    peakL.plot();
+    break;
+  case 10:
+    rmsR.plot();
+    break;
+  case 15:
+    peakR.plot();
+    break;
+  }
 }
 
