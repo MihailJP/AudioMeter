@@ -23,6 +23,7 @@ public:
   virtual void enq(int) = 0;
   virtual void deq(int) = 0;
   virtual void plot() = 0;
+  virtual ~BarGraph() = default;
 };
 
 class RMSGraph : public BarGraph {
