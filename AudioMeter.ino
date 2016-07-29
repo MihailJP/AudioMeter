@@ -6,6 +6,9 @@
 #include "screen.h"
 
 /* THIS SKETCH RUNS ON ARDUINO DUE ONLY!! */
+#ifndef __SAM3X8E__
+#error This sketch compiles only for Arduino Due
+#endif /* __SAM3X8E__ */
 
 // LCD Screen
 Screen screen;
