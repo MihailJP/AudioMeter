@@ -1,6 +1,12 @@
 Audio Meter for Arduino Due
 ===========================
 
+Features
+--------
+* Lissajous scope
+* RMS meter with peak hold
+* Peak meter with peak hold
+
 Hardwares
 ---------
 
