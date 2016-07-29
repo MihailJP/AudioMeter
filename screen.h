@@ -30,7 +30,7 @@ public:
   void bevelBoxf(int, int, int, int, int);
   void copy(int, int, int, int, int, int);
   void clear();
-  void enq(unsigned int, unsigned int);
-  void deq(unsigned int, unsigned int);
+  void enq(int, int);
+  void deq(int, int);
   void plot(unsigned int);
 };
