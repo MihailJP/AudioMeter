@@ -19,9 +19,6 @@ void LissajousView::init(Screen* scr) {
   memset(buffer, 0, sizeof(byte) * (LISSAJOUS_SIZE / 2) * (LISSAJOUS_SIZE));
   logger.print(F(", Size: ")); logger.println(sizeof(byte) * (LISSAJOUS_SIZE / 2) * (LISSAJOUS_SIZE));
 
-  enq_prescaler = 0;
-  deq_prescaler = 1;
-
   /* X axis */
   for (int i = -1; i <= 1; ++i)
     screen->line(
@@ -81,41 +78,35 @@ void LissajousView::plot(short xx, short yy, short intensity) {
 void LissajousView::set(short lisX, short lisY) {
   int xx = ((int)(lisX) + 32768) * (LISSAJOUS_SIZE) / 65536;
   int yy = ((int)(-lisY) + 32768) * (LISSAJOUS_SIZE) / 65536;
-  if (++enq_prescaler == 2) {
-    if (xx % 2 == 0) {
-      int val = buffer[xx / 2][yy] & 0x0f;
-      if ((val < 0x0f) && (++val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
-        buffer[xx / 2][yy] += 1;
-        plot(xx, yy, val);
-      }
-    } else {
-      int val = (buffer[xx / 2][yy] & 0xf0) >> 4;
-      if ((val < 0x0f) && (++val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
-        buffer[xx / 2][yy] += 0x10;
-        plot(xx, yy, val);
-      }
+  if (xx % 2 == 0) {
+    int val = buffer[xx / 2][yy] & 0x0f;
+    if ((val < 0x0f) && (++val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
+      buffer[xx / 2][yy] += 1;
+      plot(xx, yy, val);
     }
-    enq_prescaler = 0;
+  } else {
+    int val = (buffer[xx / 2][yy] & 0xf0) >> 4;
+    if ((val < 0x0f) && (++val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
+      buffer[xx / 2][yy] += 0x10;
+      plot(xx, yy, val);
+    }
   }
 }
 
 void LissajousView::reset(short lisX, short lisY) {
   int xx = ((int)(lisX) + 32768) * (LISSAJOUS_SIZE) / 65536;
   int yy = ((int)(-lisY) + 32768) * (LISSAJOUS_SIZE) / 65536;
-  if (++deq_prescaler == 2) {
-    if (xx % 2 == 0) {
-      int val = buffer[xx / 2][yy] & 0x0f;
-      if ((val > 0x00) && (--val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
-        buffer[xx / 2][yy] -= 1;
-        plot(xx, yy, val);
-      }
-    } else {
-      int val = (buffer[xx / 2][yy] & 0xf0) >> 4;
-      if ((val > 0x00) && (--val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
-        buffer[xx / 2][yy] -= 0x10;
-        plot(xx, yy, val);
-      }
+  if (xx % 2 == 0) {
+    int val = buffer[xx / 2][yy] & 0x0f;
+    if ((val > 0x00) && (--val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
+      buffer[xx / 2][yy] -= 1;
+      plot(xx, yy, val);
     }
-    deq_prescaler = 0;
+  } else {
+    int val = (buffer[xx / 2][yy] & 0xf0) >> 4;
+    if ((val > 0x00) && (--val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
+      buffer[xx / 2][yy] -= 0x10;
+      plot(xx, yy, val);
+    }
   }
 }
