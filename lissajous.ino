@@ -16,8 +16,8 @@ void LissajousView::init(Screen* scr) {
   
   logger.print(F("Buffer Address: ")); logger.print((int)buffer, HEX);
   logger.wait(100);
-  memset(buffer, 0, sizeof(short) * (LISSAJOUS_SIZE) * (LISSAJOUS_SIZE));
-  logger.print(F(", Size: ")); logger.println(sizeof(short) * (LISSAJOUS_SIZE) * (LISSAJOUS_SIZE));
+  memset(buffer, 0, sizeof(byte) * (LISSAJOUS_SIZE) * (LISSAJOUS_SIZE));
+  logger.print(F(", Size: ")); logger.println(sizeof(byte) * (LISSAJOUS_SIZE) * (LISSAJOUS_SIZE));
 
   enq_prescaler = 0;
   deq_prescaler = 1;
@@ -82,7 +82,7 @@ void LissajousView::set(short lisX, short lisY) {
   int xx = ((int)(lisX) + 32768) * (LISSAJOUS_SIZE) / 65536;
   int yy = ((int)(-lisY) + 32768) * (LISSAJOUS_SIZE) / 65536;
   if (++enq_prescaler == 2) {
-    if ((buffer[xx][yy] >= 0) && (++buffer[xx][yy] < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
+    if ((buffer[xx][yy] < 0xff) && (++buffer[xx][yy] < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
       plot(xx, yy, buffer[xx][yy]);
     }
     enq_prescaler = 0;

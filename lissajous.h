@@ -18,7 +18,7 @@ private:
   Screen* screen;
   short enq_prescaler;
   short deq_prescaler;
-  short buffer[LISSAJOUS_SIZE][LISSAJOUS_SIZE];
+  byte buffer[LISSAJOUS_SIZE][LISSAJOUS_SIZE];
   void plot(short, short, short);
 public:
   void init(Screen*);
