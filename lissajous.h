@@ -16,6 +16,8 @@ class Screen;
 class LissajousView {
 private:
   Screen* screen;
+  short enq_prescaler;
+  short deq_prescaler;
   byte buffer[LISSAJOUS_SIZE / 2][LISSAJOUS_SIZE];
   void plot(short, short, short);
 public:
