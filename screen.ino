@@ -69,7 +69,7 @@ void Screen::clear() {
   lcd.clearWindow(S1d13781_gfx::window_Main);
 }
 
-void Screen::enq(unsigned int x, unsigned int y) {
+void Screen::enq(int x, int y) {
   lissajous.set(x, y);
   rmsL.enq(y);
   rmsR.enq(x);
@@ -77,7 +77,7 @@ void Screen::enq(unsigned int x, unsigned int y) {
   peakR.enq(x);
 }
 
-void Screen::deq(unsigned int x, unsigned int y) {
+void Screen::deq(int x, int y) {
   lissajous.reset(x, y);
   rmsL.deq(y);
   rmsR.deq(x);

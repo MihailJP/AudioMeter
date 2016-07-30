@@ -23,18 +23,19 @@ public:
   virtual void enq(int) = 0;
   virtual void deq(int) = 0;
   virtual void plot() = 0;
+  virtual ~BarGraph() = default;
 };
 
 class RMSGraph : public BarGraph {
 public:
-  void enq(int);
-  void deq(int);
-  void plot();
+  void enq(int) override;
+  void deq(int) override;
+  void plot() override;
 };
 
 class PeakGraph : public BarGraph {
 public:
-  void enq(int);
-  void deq(int);
-  void plot();
+  void enq(int) override;
+  void deq(int) override;
+  void plot() override;
 };

@@ -46,10 +46,12 @@ void BarGraph::plotDbfs(Fixed value) {
   } else if (decibel >= prev) {
     int barLength = decibel * height / BARGRAPH_FLOOR_DECIBEL;
     if (barLength < 0) barLength = 0;
+    if (barLength >= height) barLength = height - 1;
     for (int i = 1; i < (width + 1) / 2; i *= 2) screen->copy(x, y + barLength, i, height - barLength, x + i, y + barLength);
     screen->copy(x, y + barLength, (width + 1) / 2, height - barLength, x + (width + 1) / 2, y + barLength);
   } else {
     int barLength = decibel * height / BARGRAPH_FLOOR_DECIBEL;
+    if (barLength < 0) barLength = 0;
     if (barLength >= height) barLength = height - 1;
     screen->boxf(x + 1, y, width - 1, barLength, 0x00000000);
   }
