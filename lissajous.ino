@@ -16,8 +16,8 @@ void LissajousView::init(Screen* scr) {
   
   logger.print(F("Buffer Address: ")); logger.print((int)buffer, HEX);
   logger.wait(100);
-  memset(buffer, 0, sizeof(short) * (LISSAJOUS_SIZE) * (LISSAJOUS_SIZE));
-  logger.print(F(", Size: ")); logger.println(sizeof(short) * (LISSAJOUS_SIZE) * (LISSAJOUS_SIZE));
+  memset(buffer, 0, sizeof(byte) * (LISSAJOUS_SIZE / 2) * (LISSAJOUS_SIZE));
+  logger.print(F(", Size: ")); logger.println(sizeof(byte) * (LISSAJOUS_SIZE / 2) * (LISSAJOUS_SIZE));
 
   enq_prescaler = 0;
   deq_prescaler = 1;
@@ -82,8 +82,18 @@ void LissajousView::set(short lisX, short lisY) {
   int xx = ((int)(lisX) + 32768) * (LISSAJOUS_SIZE) / 65536;
   int yy = ((int)(-lisY) + 32768) * (LISSAJOUS_SIZE) / 65536;
   if (++enq_prescaler == 2) {
-    if ((buffer[xx][yy] >= 0) && (++buffer[xx][yy] < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
-      plot(xx, yy, buffer[xx][yy]);
+    if (xx % 2 == 0) {
+      int val = buffer[xx / 2][yy] & 0x0f;
+      if ((val < 0x0f) && (++val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
+        buffer[xx / 2][yy] += 1;
+        plot(xx, yy, val);
+      }
+    } else {
+      int val = (buffer[xx / 2][yy] & 0xf0) >> 4;
+      if ((val < 0x0f) && (++val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
+        buffer[xx / 2][yy] += 0x10;
+        plot(xx, yy, val);
+      }
     }
     enq_prescaler = 0;
   }
@@ -93,8 +103,18 @@ void LissajousView::reset(short lisX, short lisY) {
   int xx = ((int)(lisX) + 32768) * (LISSAJOUS_SIZE) / 65536;
   int yy = ((int)(-lisY) + 32768) * (LISSAJOUS_SIZE) / 65536;
   if (++deq_prescaler == 2) {
-    if ((buffer[xx][yy] > 0) && (--buffer[xx][yy] < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
-      plot(xx, yy, buffer[xx][yy]);
+    if (xx % 2 == 0) {
+      int val = buffer[xx / 2][yy] & 0x0f;
+      if ((val > 0x00) && (--val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
+        buffer[xx / 2][yy] -= 1;
+        plot(xx, yy, val);
+      }
+    } else {
+      int val = (buffer[xx / 2][yy] & 0xf0) >> 4;
+      if ((val > 0x00) && (--val < LISSAJOUS_TRACE_INTENSITY_FACTOR)) {
+        buffer[xx / 2][yy] -= 0x10;
+        plot(xx, yy, val);
+      }
     }
     deq_prescaler = 0;
   }
