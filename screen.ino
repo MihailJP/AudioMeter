@@ -1,6 +1,8 @@
 #include "screen.h"
 #include "AudioMeter.h"
+#include "fonts.h"
 #include <cstring>
+#include <stdio.h>
 #include <SPI.h>
 
 void Screen::init() {
@@ -17,6 +19,20 @@ void Screen::init() {
   logger.print(F(", Width: ")); logger.print(width);
   logger.print(F(", Height: ")); logger.println(height);
   logger.wait(100);
+
+  caps6x8 = lcd.createFont(caps6x8_image, caps6x8_image_size, caps6x8_index, caps6x8_index_size);
+  logger.println(F("Initialized Caps6x8 font"));
+  logger.wait(100);
+
+  for (int i = 0; i <= 4; ++i) {
+    int y = 3 + (height - 8) * i / 4;
+    bevel(300, y, 176, 1);
+    if (i > 0) {
+      char valstr[8] = {0,};
+      sprintf(valstr, "%d", -i * 10);
+      lcd.drawText(S1d13781_gfx::window_Main, caps6x8, valstr, 300, y - 8, 0, 0x000000, 0, false, nullptr);
+    }
+  }
 
   lissajous.init(this);
   rmsL.init(this, 360, 4, 36, height - 8);

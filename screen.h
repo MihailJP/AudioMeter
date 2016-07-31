@@ -15,6 +15,7 @@
 class Screen {
 private:
   S1d13781_gfx lcd;
+  seFont caps6x8;
   unsigned short width, height;
   LissajousView lissajous;
   RMSGraph rmsL, rmsR;
