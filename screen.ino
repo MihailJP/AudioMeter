@@ -21,8 +21,11 @@ void Screen::init() {
   logger.wait(100);
 
   caps6x8 = lcd.createFont(caps6x8_image, caps6x8_image_size, caps6x8_index, caps6x8_index_size);
-  logger.println(F("Initialized Caps6x8 font"));
-  logger.wait(100);
+  logger.print(F("Initialized Caps6x8 font, Address: ")); logger.println((int)caps6x8, HEX); logger.wait(100);
+  segment6x10 = lcd.createFont(segment6x10_image, segment6x10_image_size, segment6x10_index, segment6x10_index_size);
+  logger.print(F("Initialized Segment6x10 font, Address: ")); logger.println((int)segment6x10, HEX); logger.wait(100);
+  segment9x15 = lcd.createFont(segment9x15_image, segment9x15_image_size, segment9x15_index, segment9x15_index_size);
+  logger.print(F("Initialized Segment9x15 font, Address: ")); logger.println((int)segment9x15, HEX); logger.wait(100);
 
   for (int i = 0; i <= 4; ++i) {
     int y = 3 + (height - 8) * i / 4;
