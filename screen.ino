@@ -28,7 +28,7 @@ void Screen::init() {
   logger.print(F("Initialized Segment9x15 font, Address: ")); logger.println((int)segment9x15, HEX); logger.wait(100);
 
   for (int i = 0; i <= 4; ++i) {
-    int y = 3 + (height - 8) * i / 4;
+    int y = 3 + (height - 8 - 20) * i / 4;
     bevel(300, y, 176, 1);
     if (i > 0) {
       char valstr[8] = {0,};
@@ -38,10 +38,10 @@ void Screen::init() {
   }
 
   lissajous.init(this);
-  rmsL.init(this, 360, 4, 36, height - 8);
-  rmsR.init(this, 400, 4, 36, height - 8);
-  peakL.init(this, 320, 4, 36, height - 8);
-  peakR.init(this, 440, 4, 36, height - 8);
+  rmsL.init(this, 360, 4, 26, height - 8);
+  rmsR.init(this, 400, 4, 26, height - 8);
+  peakL.init(this, 320, 4, 26, height - 8);
+  peakR.init(this, 440, 4, 26, height - 8);
 }
 
 unsigned short Screen::getWidth() {
