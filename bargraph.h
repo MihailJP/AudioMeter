@@ -5,7 +5,7 @@
 class Screen;
 
 #define BARGRAPH_FLOOR_DECIBEL (-40.0)
-#define BARGRAPH_PEAKHOLD 67
+#define BARGRAPH_PEAKHOLD 33
 
 class BarGraph {
 protected:

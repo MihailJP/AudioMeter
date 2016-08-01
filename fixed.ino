@@ -79,7 +79,9 @@ const Fixed Fixed::operator + () const {
   return *this;
 }
 const Fixed Fixed::operator - () const {
-  return std::move(Fixed(-myVal));
+  Fixed tmpVal;
+  tmpVal.myVal = -myVal;
+  return std::move(tmpVal);
 }
 
 /* Comparison */
