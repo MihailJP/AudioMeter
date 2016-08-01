@@ -33,7 +33,7 @@ void Screen::init() {
     if (i > 0) {
       char valstr[8] = {0,};
       sprintf(valstr, "%d", -i * 10);
-      lcd.drawText(S1d13781_gfx::window_Main, caps6x8, valstr, 300, y - 8, 0, 0x000000, 0, false, nullptr);
+      (void)this->print(Caps_6x8, valstr, 300, y - 8, 0, 0x000000, 0, false);
     }
   }
 
@@ -119,5 +119,18 @@ void Screen::plot(unsigned int phase) {
     peakR.plot();
     break;
   }
+}
+
+bool Screen::print(FontCode font, const char* str, unsigned int x, unsigned int y, unsigned int width, unsigned int fg, unsigned int bg, bool wordwrap) {
+  seFont selectedFont;
+  bool cropped;
+  switch (font) {
+    case Caps_6x8:     selectedFont = caps6x8;     break;
+    case Segment_6x10: selectedFont = segment6x10; break;
+    case Segment_9x15: selectedFont = segment9x15; break;
+    default: return false; // reject if invalid font
+  }
+  lcd.drawText(S1d13781_gfx::window_Main, selectedFont, str, x, y, width, fg, bg, wordwrap, &cropped);
+  return cropped;
 }
 
