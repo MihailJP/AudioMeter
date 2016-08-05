@@ -2,17 +2,19 @@
 #include "sampler.h"
 #include <cmath>
 #include <cstdlib>
+#include <stdio.h>
 
 void BarGraph::init(Screen* scr, unsigned short xx, unsigned short yy, unsigned short ww, unsigned short hh) {
   screen = scr;
   x = xx;
   y = yy;
   width = ww;
-  height = hh;
+  height = hh - 20;
   val = 0;
   peak = 0;
   peakHold = 0;
   Fixed prev = BARGRAPH_FLOOR_DECIBEL;
+  readoutPrescaler = 0;
 
   screen->bevelBoxf(x, y, width, height, 0x00000000);
   for (int i = 0; i < height / 2; ++i) {
@@ -23,6 +25,7 @@ void BarGraph::init(Screen* scr, unsigned short xx, unsigned short yy, unsigned 
     int col = (((height - 1 - i - (height / 2)) * 256 / (height / 2)) << 16) | 0x0000ff00;
     screen->pset(x, y + i, col);
   }
+  screen->bevelBoxf(x, y + height + 2, width, 18, 0x00000000);
 
   logger.print(F("Bargraph window X: ")); logger.print(x);
   logger.print(F(", Y: ")); logger.print(y);
@@ -40,6 +43,16 @@ Fixed BarGraph::dBfs(Fixed value) {
 
 void BarGraph::plotDbfs(Fixed value) {
   Fixed decibel = dBfs(value);
+  
+  if (++readoutPrescaler >= 2) {
+    char tmpstr[8];
+    sprintf(tmpstr, "%5.1f", (float)(-decibel));
+    tmpstr[3] = '\0';
+    screen->print(Screen::Segment_9x15, tmpstr + 1, x + 1,      y + height + 4, 18, 0xffffff, 0x1000000);
+    screen->print(Screen::Segment_6x10, tmpstr + 4, x + 1 + 18, y + height + 9,  6, 0xffffff, 0x1000000);
+    readoutPrescaler = 0;
+  }
+  
   if (decibel <= BARGRAPH_FLOOR_DECIBEL) {
     screen->boxf(x + 1, y, width - 1, height, 0x00000000);
     decibel = BARGRAPH_FLOOR_DECIBEL;

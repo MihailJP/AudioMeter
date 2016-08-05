@@ -1,6 +1,8 @@
 #include "screen.h"
 #include "AudioMeter.h"
+#include "fonts.h"
 #include <cstring>
+#include <stdio.h>
 #include <SPI.h>
 
 void Screen::init() {
@@ -18,11 +20,28 @@ void Screen::init() {
   logger.print(F(", Height: ")); logger.println(height);
   logger.wait(100);
 
+  caps6x8 = lcd.createFont(caps6x8_image, caps6x8_image_size, caps6x8_index, caps6x8_index_size);
+  logger.print(F("Initialized Caps6x8 font, Address: ")); logger.println((int)caps6x8, HEX); logger.wait(100);
+  segment6x10 = lcd.createFont(segment6x10_image, segment6x10_image_size, segment6x10_index, segment6x10_index_size);
+  logger.print(F("Initialized Segment6x10 font, Address: ")); logger.println((int)segment6x10, HEX); logger.wait(100);
+  segment9x15 = lcd.createFont(segment9x15_image, segment9x15_image_size, segment9x15_index, segment9x15_index_size);
+  logger.print(F("Initialized Segment9x15 font, Address: ")); logger.println((int)segment9x15, HEX); logger.wait(100);
+
+  for (int i = 0; i <= 4; ++i) {
+    int y = 3 + (height - 8 - 20) * i / 4;
+    bevel(300, y, 176, 1);
+    if (i > 0) {
+      char valstr[8] = {0,};
+      sprintf(valstr, "%d", -i * 10);
+      (void)this->print(Caps_6x8, valstr, 300, y - 8, 0, 0x000000, 0, false);
+    }
+  }
+
   lissajous.init(this);
-  rmsL.init(this, 360, 4, 36, height - 8);
-  rmsR.init(this, 400, 4, 36, height - 8);
-  peakL.init(this, 320, 4, 36, height - 8);
-  peakR.init(this, 440, 4, 36, height - 8);
+  rmsL.init(this, 360, 4, 26, height - 8);
+  rmsR.init(this, 400, 4, 26, height - 8);
+  peakL.init(this, 320, 4, 26, height - 8);
+  peakR.init(this, 440, 4, 26, height - 8);
 }
 
 unsigned short Screen::getWidth() {
@@ -100,5 +119,18 @@ void Screen::plot(unsigned int phase) {
     peakR.plot();
     break;
   }
+}
+
+bool Screen::print(FontCode font, const char* str, unsigned int x, unsigned int y, unsigned int width, unsigned int fg, unsigned int bg, bool wordwrap) {
+  seFont selectedFont;
+  bool cropped;
+  switch (font) {
+    case Caps_6x8:     selectedFont = caps6x8;     break;
+    case Segment_6x10: selectedFont = segment6x10; break;
+    case Segment_9x15: selectedFont = segment9x15; break;
+    default: return false; // reject if invalid font
+  }
+  lcd.drawText(S1d13781_gfx::window_Main, selectedFont, str, x, y, width, fg, bg, wordwrap, &cropped);
+  return cropped;
 }
 

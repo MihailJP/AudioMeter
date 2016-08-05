@@ -18,6 +18,7 @@ protected:
   void plotDbfs(Fixed);
   void plotPeak(Fixed);
   void updatePeak(int);
+  unsigned short readoutPrescaler;
 public:
   void init(Screen*, unsigned short, unsigned short, unsigned short, unsigned short);
   virtual void enq(int) = 0;
