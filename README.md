@@ -7,6 +7,13 @@ Features
 * RMS meter with peak hold
 * Peak meter with peak hold
 
+Compile
+-------
+* **Before you open the sketch with Arduino IDE, you must run [makefont.sh](./makefont.sh)
+  in order to convert the font files to C source.**
+  * This requires [Ruby](https://www.ruby-lang.org/)
+* Once the font files are converted, then open the sketch to compile and upload to the microcontroller board.
+
 Hardwares
 ---------
 
