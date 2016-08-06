@@ -1,6 +1,7 @@
 #include "fixed.h"
 #include <utility>
 #include <cmath>
+#include "logtable.h"
 
 #define PREC 12
 
@@ -171,6 +172,15 @@ const Fixed Fixed::log2(const Fixed& val) {
   if (val.myVal <= 0) {
     ans.myVal = 0x80000000L; // invalid
   } else {
+#ifdef USE_LOG_TABLE
+    ans = 31 - PREC;
+    unsigned long tmpVal = val.myVal;
+    while ((tmpVal & 0x80000000UL) == 0) {
+      tmpVal <<= 1;
+      ans -= 1;
+    }
+    ans.myVal += logTable[(tmpVal & 0x7ff80000UL) >> 19];
+#else
     long long antilog = val.myVal;
     if ((antilog & (-1 << PREC)) == 0) { // less than one
       while ((antilog & (-1 << PREC)) != (1 << PREC)) {
@@ -193,6 +203,7 @@ const Fixed Fixed::log2(const Fixed& val) {
       }
       antilog >>= PREC;
     }
+#endif /* USE_LOG_TABLE */
   }
   return std::move(ans);
 }

@@ -2,6 +2,8 @@
 
 /* Fixed point decimal class, 16 + 16 bits */
 
+#define USE_LOG_TABLE
+
 class Fixed {
 private:
   bool valid;
