@@ -3,6 +3,7 @@
 /* Fixed point decimal class, 16 + 16 bits */
 
 #define USE_LOG_TABLE
+#define USE_SQRT_TABLE
 
 class Fixed {
 private:

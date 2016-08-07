@@ -1,7 +1,9 @@
 #include "fixed.h"
 #include <utility>
 #include <cmath>
+#include <assert.h>
 #include "logtable.h"
+#include "sqrttable.h"
 
 #define PREC 12
 
@@ -109,6 +111,22 @@ bool Fixed::operator >= (const Fixed& val) const {
 /* Function */
 
 unsigned long calc_sqrt(unsigned long val) {
+#ifdef USE_SQRT_TABLE
+  /* use lookup table */
+  unsigned long x = val;
+  unsigned long ans = 0;
+  int pos = 0;
+
+  if (x == 0) return 0UL;
+  assert(PREC % 2 == 0);
+
+  while ((x & 0xc0000000UL) == 0) {
+    x <<= 2;
+    ++pos;
+  }
+  assert(x >= 0x40000000UL);
+  ans = ((unsigned long)sqrtTable[(x >> 20) - 0x400] + 0x10000UL) << (15 - pos);
+#else
   /* square root, algorithm like Odhner machine (uses hexadecimal rather than decimal) */
   
   unsigned long x = val;
@@ -139,6 +157,7 @@ unsigned long calc_sqrt(unsigned long val) {
       }
     }
   } while (ansPos >= 4);
+#endif /* USE_SQRT_TABLE */
 
   return ans;
 }
